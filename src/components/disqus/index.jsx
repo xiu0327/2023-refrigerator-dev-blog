@@ -31,6 +31,7 @@ export class Disqus extends Component {
         title={post.frontmatter.title}
         url={url}
         category_id={post.frontmatter.category_id}
+        author={post.frontmatter.author}
         onNewComment={this.notifyAboutComment}
       />
     )

@@ -9,6 +9,11 @@
   transition: text-shadow 0.3s, opacity 0.4s;
   opacity: 0;
 
+  h2 {
+    color: black;
+    margin-bottom: 7px;
+  }
+
   p {
     font-size: 90%;
     line-height: 1.4;
