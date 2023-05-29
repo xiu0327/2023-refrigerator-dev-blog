@@ -34,7 +34,7 @@
    word-break: normal;
    word-wrap: normal;
    line-height: 1.6;
-   font-size: 20px;
+   font-size: 15px;
  
    -moz-tab-size: 2;
    -o-tab-size: 2;
@@ -73,6 +73,7 @@
    white-space: normal;
    background: $inline-dimmed-color;
    color: $inline-text-color;
+   font-size: 14px;
  }
  
  .token.comment,

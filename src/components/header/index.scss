@@ -5,15 +5,41 @@
   font-size: 38px;
   letter-spacing: -2px;
   font-weight: 600;
-  img{
+}
+
+
+/* 모바일 화면에서 이미지 크기 설정 */
+@media (max-width: 767px) {
+  .home-header img {
+    width: 50%;
     margin-bottom: -45px;
   }
 }
 
+/* 모바일 화면에서 링크 설정 */
+@media (max-width: 767px) {
+  .link {
+    display: flex;
+    margin-top: 50px;
+    box-shadow: none;
+    text-decoration: none;
+    color: inherit;
+  }
+}
 
-.link {
-  margin-bottom: 20px;
-  box-shadow: none;
-  text-decoration: none;
-  color: inherit;
+/* 웹 화면에서 이미지 크기 설정 */
+@media (min-width: 768px) {
+  .home-header img {
+    width: 20%;
+    margin-bottom: -45px;
+  }
+}
+
+@media (min-width: 768px) {
+  .link {
+    margin-bottom: 20px;
+    box-shadow: none;
+    text-decoration: none;
+    color: inherit;
+  }
 }
