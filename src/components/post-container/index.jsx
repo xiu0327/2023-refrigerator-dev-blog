@@ -15,6 +15,11 @@ export const PostContainer = ({ html }) => {
     paragraphElements.forEach((element) => {
       element.style.marginBottom = '15px' // 원하는 스타일 변경을 여기에 적용하세요
     })
+
+    const liElements = containerRef.current.querySelectorAll('li')
+    liElements.forEach((element) => {
+      element.style.marginLeft = '-17px' // 원하는 스타일 변경을 여기에 적용하세요
+    })
   }, [])
 
   return (
