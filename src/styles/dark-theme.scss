@@ -2,8 +2,9 @@ body.dark {
   background-color: $dark-background-color;
   text-shadow: $dark-text-shadow;
   color: $dark-light-font-color;
-  font-size: 14px;
+  font-size: 13.5px;
   line-height: 1.45;
+  letter-spacing: -0.1px;
   // home
   .home-header {
     color: $dark-light-font-color;
