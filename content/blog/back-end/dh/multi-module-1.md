@@ -34,8 +34,8 @@ draft: false
 위의 글의 내용에 따르면 멀티 모듈을 사용함으로써 공통으로 사용되는 코드를 모듈화할 수 있기 때문에 코드 변경시 수정되는 코드의 양을 줄일 수 있고 코드 동기화할 필요가 없기 때문에 동기화로 인한 실수를 없앨 수 있다고 한다.
 
 > - 해당 블로그의 버전은  스프링 부트 1.5.x이기 때문에 현재 2.7 버전을 사용하는 우리 프로젝트와 맞지 않았다. 그래서 우리 프로젝트에 적용할 수 있는 [이 글](https://backtony.github.io/spring/2022-06-02-spring-module-1/)을 찾게 되었다.
-- 한가지 더 알게 된 사실은 [이 글](https://awse2050.tistory.com/m/109)인데 여기서는 build.gradle의 implementation과 api 옵션으로 의존성의 개방과 폐쇠를 설정할 수 있다.
-- 해결 방법을 설명하기 전에 우리는 api 모듈에 헥사고날 아키텍처를 사용하고 있으며 글과 그림을 번갈아 보며 이해해주길 바란다.
+> - 한가지 더 알게 된 사실은 [이 글](https://awse2050.tistory.com/m/109)인데 여기서는 build.gradle의 implementation과 api 옵션으로 의존성의 개방과 폐쇠를 설정할 수 있다.
+> - 해결 방법을 설명하기 전에 우리는 api 모듈에 헥사고날 아키텍처를 사용하고 있으며 글과 그림을 번갈아 보며 이해해주길 바란다.
 
 그리하여 해당 문제를 해결하고자 회의를 진행했고 회의 결과 두 단일 모듈을 합쳐 멀티 모듈로 변경하기로 했다.
 
@@ -100,7 +100,7 @@ api와 batch 두 단일 모듈 중 공통으로 사용하는 코드를 모듈로
 
 ### Component Scan
 
-첫번째 팁은 component scan과 관련된 것이다. component scan은 애플리케이션을 실행하는 영역, 즉 우리 프로젝트 내에서는 batch와 api 모듈의 application.java 내부 @SpringBootApplication 어노테이션을 통해서 scan의 대상이 확정된다. 대체적으로 모듈 내의 application.java가 있는 레벨에서 bean 스캔의 대상이 정해진다. 아래의 코드를 보자
+첫번째 팁은 component scan과 관련된 것이다. component scan은 애플리케이션을 실행하는 영역, 즉 우리 프로젝트 내에서는 batch와 api 모듈의 `xxxapplication.java` 내부 `@SpringBootApplication` 어노테이션을 통해서 scan의 대상이 확정된다. 대체적으로 모듈 내의 `xxxapplication.java`가 있는 레벨에서 bean 스캔의 대상이 정해진다. 아래의 디렉토리 구조를 보자
 
 ```
 api (모듈)
@@ -113,7 +113,7 @@ api (모듈)
 
 ```
 
-xxxAppliation.java의 @SpringBootApplication 어노테이션을 통해 xxxApplication.java와 동일한 레벨인 api 안, 즉 A, B 디렉토리 내부 bean이나 component를 찾아서 스프링 컨테이너에 올린다. 그러나 문제는 다음과 같다. 아래의 코드를 보자.
+`xxxAppliation.java`의 `@SpringBootApplication` 어노테이션을 통해 `xxxApplication.java`와 동일한 레벨인 api 안, 즉 A, B 디렉토리 내부 bean이나 component를 찾아서 스프링 컨테이너에 올린다. 그러나 문제는 다음과 같다. 아래의 디렉토리 구조를 보자.
 
 ```
 api (모듈)
@@ -131,7 +131,7 @@ batch (모듈)
             ㄴ D
 ```
 
-이렇게 디렉토리 구조가 설정되어 있다면 xxxApplication.java는 api 디렉토리 내부의 레벨로 bean 스캔이 정해졌기 때문에 domain의 디렉토리 내부의 bean들이 필요하더라도 사용할 수 없다. 그래서 따로 @SpringBootApplication에 패키지를 추가해줘야한다. 그러나 이걸 해결해주는 팁을 알려주고자 한다.
+이렇게 디렉토리 구조가 설정되어 있다면 `xxxApplication.java`는 api 디렉토리 내부의 레벨로 bean 스캔이 정해졌기 때문에 domain의 디렉토리 내부의 bean들이 필요하더라도 사용할 수 없다. 그래서 따로 `@SpringBootApplication`에 패키지를 추가해줘야한다. 그러나 이걸 해결해주는 팁을 알려주고자 한다.
 
 ```java
 // 이걸 일일이 다 추가해줘야함..
@@ -145,7 +145,7 @@ public class xxxApplication {
 
 방법은 먼저 두 모듈의 패키지 명을 동일하게 바꾼다. (com.example1, com.example2 에서 모두 com.example로 변경한다.)
 
-그리고 @SpringBootApplication이 있는 java 파일을 example 하위 즉, api 패키지와 동등한 레벨로 위로 한 단계 이동시킨다. 그렇게 하여 변경한 코드는 다음과 같다.
+그리고 `@SpringBootApplication`이 있는 java 파일을 example 하위 즉, api 패키지와 동등한 레벨로 위로 한 단계 이동시킨다. 그렇게 하여 변경한 구조는 다음과 같다.
 
 ```
 api (모듈)
@@ -177,17 +177,17 @@ batch (모듈)
             ㄴ D
 ```
 
-이렇게 하면 아까 처음 얘기했던 xxxApplication.java의 bean 스캔 범위를 이용해서 domain까지 bean 스캔을 할 수 있다.
+이렇게 하면 아까 처음 얘기했던 `xxxApplication.java`의 bean 스캔 범위를 이용해서 domain까지 bean 스캔을 할 수 있다.
 
-두 모듈 간의 공통 패키지가(com.example) 있고 xxxAppliation.java를 api와 domain 디렉토리의 레벨과 동일하게 설정하였기 때문에 xxxAppliation.java는 api와 domain 디렉토리 내부 bean을 모두 스캔할 수 있게 된다.
+두 모듈 간의 공통 패키지가(com.example) 있고 `xxxAppliation.java`를 api와 domain 디렉토리의 레벨과 동일하게 설정하였기 때문에 `xxxAppliation.java`는 api와 domain 디렉토리 내부 bean을 모두 스캔할 수 있게 된다.
 
-이 방법이 꼼수일 수도 있고 관례일 수도 있지만 xxxAppliation.java 파일을 한 단계 위로 올리는 것으로 설정해야하는 코드의 양이 줄어들어 실수도 줄고 많은 이점을 챙길 수 있다고 생각한다.
+이 방법이 꼼수일 수도 있고 관례일 수도 있지만 `xxxAppliation.java` 파일을 한 단계 위로 올리는 것으로 설정해야하는 코드의 양이 줄어들어 실수도 줄고 많은 이점을 챙길 수 있다고 생각한다.
 
 ### application.yml
 
-두 번째 팁은 application.yml과 관련된 것이다. 이것은 보편적으로 잘 알려져 있는 방법이다. 공통적으로 사용하는 모듈에 application-xxx.yml을 만들어두고 실행되는 애플리케이션 모듈에서 application.yml에 include로 xxx를 작성해두면 애플리케이션 실행시 application-xxx.yml를 자동으로 읽어서 application.yml에 해당 옵션을 추가하여 실행한다.
+두 번째 팁은 `application.yml`과 관련된 것이다. 이것은 보편적으로 잘 알려져 있는 방법이다. 공통적으로 사용하는 모듈에 `application-xxx.yml`을 만들어두고 실행되는 애플리케이션 모듈에서 `application.yml`에 include로 `xxx`를 작성해두면 애플리케이션 실행시 `application-xxx.yml`를 자동으로 읽어서 `application.yml`에 해당 옵션을 추가하여 실행한다.
 
-이 방법도 실행되는 애플리케이션이 여러개 있을 때 application.yml에 사용되는 공통 속성을 모듈화하여 불러오기 때문에 코드의 양도 줄일 수 있고 실수도 줄일 수 있는 좋은 방법이다.
+이 방법도 실행되는 애플리케이션이 여러개 있을 때 `application.yml`에 사용되는 공통 속성을 모듈화하여 불러오기 때문에 코드의 양도 줄일 수 있고 실수도 줄일 수 있는 좋은 방법이다.
 
 이걸 알려준 [이 글](https://techblog.woowahan.com/2637/)에서는 이마져도 사람의 실수를 줄이기 위해 라이브러리를 제작했다고 했다. 하지만 나는 명시적으로 어떤 속성 파일을 사용하는지 include로 확인하는 것이 더 명확한 것 같아서 사용하진 않았다. 해당 라이브러리를 사용하고 싶다면 구글에 `spring-boot-custom-yaml-importer`라고 검색해보자.
 
@@ -197,7 +197,7 @@ batch (모듈)
 
 먼저 api, domain, database 모듈이 있고 api는 domain을 domain은 database를 의존하며 api와 domain은 아래와 같이 dependency가 설정되어 있다고 가정해보자.
 
-```gradle
+``` gradle
 // domain의 bulid.gradle
 
 ... 
