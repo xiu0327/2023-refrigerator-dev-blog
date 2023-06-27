@@ -1,6 +1,6 @@
 ---
 title: '냉부해 멀티 모듈 적응기 (2)'
-date: 2023-06-27 12:26:00
+date: 2023-06-27 12:27:00
 category: 'back-end'
 profile : 'https://refrigerator-image.s3.ap-northeast-2.amazonaws.com/icon/IMG_9706.JPG'
 author: '김도현'
